@@ -1,9 +1,37 @@
-# data.js 数据契约（v0 定稿，三方共用，改动必须先改这里）
+# 数据契约（v0.1 运行库版，三方共用，改动必须先改这里）
 
-`data.js` 内容为一个赋值语句：`window.SANDBOX_DATA = { ... };`
-零依赖，`index.html` 通过 `<script src="data.js"></script>` 加载，file:// 双击可用。
+## 运行库结构（v0.1 起，替代单一 data.js）
 
-## 顶层结构
+沙盘支持多份推演并存，`index.html` 打开先进「选档案」页。文件组织：
+
+```
+runs/
+  manifest.js        # 公开清单（进 git）
+  real-manifest.js   # 真实自我清单（gitignore，本机才有，页面加载失败静默跳过）
+  <run-id>.js        # 每份推演一个文件（真实自我的放 runs/real/ 下，gitignore）
+  real/<run-id>.js
+```
+
+`manifest.js` / `real-manifest.js` 都是追加式注册：
+
+```js
+window.SANDBOX_LIBRARY = window.SANDBOX_LIBRARY || { runs: [] };
+window.SANDBOX_LIBRARY.runs.push(
+  { id: "musk-1995", tier: "celebrity", title: "马斯克 1995：斯坦福门口",
+    subtitle: "退学创办 Zip2 / 留校读博 / 去 Netscape", file: "runs/musk-1995.js", generatedAt: "2026-07-06" }
+);
+```
+
+每份推演文件 `runs/<run-id>.js`（惰性加载，选中才注入 script）：
+
+```js
+window.SANDBOX_RUNS = window.SANDBOX_RUNS || {};
+window.SANDBOX_RUNS["musk-1995"] = { meta: {...}, dimensions: [...], timelines: [...], optionC: {...} };
+```
+
+推演对象本体的字段契约见下（与旧 window.SANDBOX_DATA 完全同构）。tier 枚举 = `real / persona / celebrity`，与 meta.profileTier 一致。
+
+## 推演对象顶层结构
 
 ```js
 window.SANDBOX_DATA = {

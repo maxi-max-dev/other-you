@@ -279,12 +279,104 @@
   .err-box h2{color:var(--accent2);margin:0 0 8px}
   .err-box p{color:var(--ink-dim);font-size:14px}
   .err-box code{background:var(--bg2);padding:2px 6px;border-radius:4px;color:var(--accent2)}
+
+  /* ---------- 换个决定 按钮（沙盘左上） ---------- */
+  .back-btn{
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:13px;padding:7px 14px;border-radius:999px;margin-bottom:16px;
+    border:1px solid var(--line);background:var(--bg2);color:var(--ink-dim);transition:.15s;
+  }
+  .back-btn:hover{border-color:var(--accent2);color:var(--ink);background:var(--panel2)}
+  .back-btn .home{font-size:15px}
+
+  /* ---------- Landing 首页 ---------- */
+  .landing{max-width:1080px;margin:0 auto;padding:8px 8px 40px}
+  .land-hero{
+    text-align:center;padding:40px 20px 28px;position:relative;
+  }
+  .land-hero h1{
+    font-size:38px;margin:0 0 10px;letter-spacing:3px;color:var(--accent2);
+    /* 像素味描边阴影 */
+    text-shadow:3px 3px 0 #1c140d, 6px 6px 0 rgba(0,0,0,.25);
+    font-weight:800;
+  }
+  .land-hero .sub{font-size:15px;color:var(--ink-dim);max-width:560px;margin:0 auto;line-height:1.7}
+  .land-hero .pix-rule{
+    width:200px;height:8px;margin:20px auto 0;
+    background:repeating-linear-gradient(90deg,var(--accent) 0 8px,transparent 8px 16px);
+    opacity:.65;image-rendering:pixelated;
+  }
+
+  .tier-section{margin:30px 0 8px}
+  .tier-section .th{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding-bottom:10px;margin-bottom:16px;border-bottom:1px solid var(--line);
+  }
+  .tier-section .th .em{font-size:22px}
+  .tier-section .th h2{margin:0;font-size:19px;color:var(--ink);letter-spacing:.5px}
+  .tier-section .th .cnt{font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+  .tier-section.tier-real .th h2{color:#bfe6c4}
+  .tier-section.tier-persona .th h2{color:#dcc9f0}
+  .tier-section.tier-celebrity .th h2{color:var(--gold)}
+  .fic-note{
+    font-size:11px;padding:2px 9px;border-radius:999px;
+    background:#5a2e2e;border:1px solid #c76b4a;color:#ffd9c2;font-weight:600;
+  }
+
+  .card-grid{
+    display:grid;gap:14px;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  }
+  .run-card{
+    cursor:pointer;position:relative;overflow:hidden;
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));
+    box-shadow:var(--shadow);transition:transform .15s, border-color .15s, box-shadow .15s;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .run-card::before{
+    /* 左侧像素色条 */
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:repeating-linear-gradient(180deg,var(--accent) 0 5px,var(--accent2) 5px 10px);
+    opacity:.8;
+  }
+  .run-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 26px rgba(0,0,0,.5)}
+  .run-card .rc-title{font-size:16px;font-weight:700;color:var(--accent2);padding-left:8px;line-height:1.4}
+  .run-card .rc-sub{font-size:13px;color:var(--ink-dim);padding-left:8px;line-height:1.6;flex:1}
+  .run-card .rc-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding-left:8px;margin-top:4px;font-size:11.5px;color:var(--ink-faint);
+  }
+  .run-card .rc-go{color:var(--accent);font-weight:600}
+  .run-card.loading{cursor:progress;opacity:.75}
+  .run-card.loading .rc-go::after{content:" · 加载中…"}
+
+  .empty-state{
+    border:1px dashed var(--line);border-radius:12px;padding:26px 24px;
+    background:rgba(46,66,48,.18);color:var(--ink-dim);font-size:13.5px;line-height:1.8;
+  }
+  .empty-state .lock{font-size:26px;display:block;margin-bottom:8px;opacity:.7}
+  .empty-state code{background:var(--bg2);padding:2px 6px;border-radius:4px;color:#bfe6c4}
+
+  /* landing 也要底部免责，但视图切换时 footer 时间轴要藏 */
+  .footer-fixed.landing-mode .timeline-bar{display:none}
+  .footer-fixed.landing-mode .disclaimer{border-top:none}
+
+  /* 加载失败提示条（landing 内联） */
+  .load-error{
+    margin:14px 0;padding:12px 16px;border-radius:10px;
+    background:#5a2e2e;border:1px solid #c76b4a;color:#ffd9c2;font-size:13px;
+  }
 </style>
 </head>
 <body>
-  <div id="app" class="wrap"></div>
+  <!-- 选档案首页（landing） -->
+  <div id="landing" class="wrap"></div>
 
-  <!-- 底部固定：时间轴 + 免责 -->
+  <!-- 沙盘视图（进入推演时填充） -->
+  <div id="app" class="wrap" style="display:none"></div>
+
+  <!-- 底部固定：时间轴 + 免责（两个视图都常驻，landing 只显示免责） -->
   <div class="footer-fixed" id="footer" style="display:none">
     <div class="timeline-bar">
       <div class="tl-head">
@@ -306,33 +398,41 @@
   <!-- 模态挂载点 -->
   <div id="modalRoot"></div>
 
-<script src="data.js"></script>
+<!-- 公开推演清单（进 git，同步加载）；real-manifest 由脚本惰性注入并静默容错 -->
+<script src="runs/manifest.js"></script>
 <script>
 (function(){
   "use strict";
 
-  // ============ 0. 容错：数据校验 ============
-  const D = window.SANDBOX_DATA;
-  function fail(msg, detail){
-    document.getElementById('app').innerHTML =
-      '<div class="err-box"><div class="em">🫥</div><h2>'+msg+'</h2><p>'+(detail||'')+'</p></div>';
-    const f=document.getElementById('footer'); if(f) f.style.display='none';
-    throw new Error(msg);
-  }
-  if(!D || typeof D!=='object') fail('数据没能加载', '请确认 <code>data.js</code> 和 <code>index.html</code> 在同一个文件夹里，然后重新打开本页面。');
-  const meta = D.meta||{};
-  const dims = Array.isArray(D.dimensions)&&D.dimensions.length ? D.dimensions : [
-    {id:"energy",name:"精力",icon:"⚡"},{id:"money",name:"钱",icon:"💰"},
-    {id:"skill",name:"技能",icon:"🛠"},{id:"options",name:"选项数",icon:"🚪"}
-  ];
-  let timelines = Array.isArray(D.timelines) ? D.timelines.filter(t=>t && typeof t==='object') : [];
-  if(!timelines.length) fail('还没有可展示的时间线', '<code>data.js</code> 里的 <code>timelines</code> 是空的，换一份数据再试。');
+  // ==================================================================
+  // 沙盘引擎：mountSandbox(runData) 把一份推演数据渲染进 #app。
+  // 每次调用都是干净的一次挂载（内部状态全部本地化，无跨次残留）。
+  // 返回一个 teardown 函数，供切回 landing 时彻底复位。
+  // ==================================================================
+  function mountSandbox(D){
+    const appEl = document.getElementById('app');
 
-  const spanDays = (typeof meta.spanDays==='number' && meta.spanDays>0) ? meta.spanDays : 90;
-  const startDate = parseDate(meta.startDate) || new Date();
+    // ============ 0. 容错：数据校验 ============
+    function fail(msg, detail){
+      appEl.innerHTML =
+        '<div class="err-box"><div class="em">🫥</div><h2>'+msg+'</h2><p>'+(detail||'')+'</p></div>';
+      const f=document.getElementById('footer'); if(f){ f.classList.add('landing-mode'); }
+      throw new Error(msg);
+    }
+    if(!D || typeof D!=='object') fail('数据没能加载', '这份推演文件的内容读不出来，换一份再试。');
+    const meta = D.meta||{};
+    const dims = Array.isArray(D.dimensions)&&D.dimensions.length ? D.dimensions : [
+      {id:"energy",name:"精力",icon:"⚡"},{id:"money",name:"钱",icon:"💰"},
+      {id:"skill",name:"技能",icon:"🛠"},{id:"options",name:"选项数",icon:"🚪"}
+    ];
+    let timelines = Array.isArray(D.timelines) ? D.timelines.filter(t=>t && typeof t==='object') : [];
+    if(!timelines.length) fail('还没有可展示的时间线', '这份推演里的 <code>timelines</code> 是空的，换一份数据再试。');
 
-  // SCENES 场景库需要在清洗循环前就绪（用于校验 scene 字段）
-  const SCENES = SCENES_DEF();
+    const spanDays = (typeof meta.spanDays==='number' && meta.spanDays>0) ? meta.spanDays : 90;
+    const startDate = parseDate(meta.startDate) || new Date();
+
+    // SCENES 场景库需要在清洗循环前就绪（用于校验 scene 字段）
+    const SCENES = SCENES_DEF();
 
   // 每条线补默认字段 + 清洗事件
   const LINE_COLORS = ['#e8a45c','#7dc98a','#b58ad6','#f2ca52','#7fb2e8','#e0685f','#5ec9c0','#d98cb0'];
@@ -464,10 +564,12 @@
 
   // ============ 主渲染 ============
   function renderApp(){
-    document.getElementById('app').innerHTML =
+    appEl.innerHTML =
+      '<div class="back-btn" id="backBtn"><span class="home">⌂</span> 换个决定</div>' +
       renderHead() + renderSelector() + renderWorldsSkeleton();
     document.getElementById('disclaimer').innerHTML =
       '⚠️ <b>'+esc(meta.disclaimer||'这是可能性的戏剧化演出，不是预测')+'</b>';
+    document.getElementById('backBtn').addEventListener('click', ()=>goLanding());
     bindSelector();
     buildCanvases();
     buildTicks();
@@ -615,8 +717,9 @@
   }
 
   // ============ requestAnimationFrame 循环（所有 canvas 同跑）============
-  let rafId=null, lastT=0;
+  let rafId=null, lastT=0, torndown=false;
   function loop(ts){
+    if(torndown) return; // 已切回 landing，停止本实例
     const dt = ts-lastT; lastT=ts;
     // 自动播放推进时间轴
     if(playing){
@@ -808,12 +911,16 @@
     playing=v;
     document.getElementById('playBtn').textContent = v?'❚❚':'▶';
   }
+  // 收集本实例挂在持久 DOM / window 上的监听，teardown 时逐个摘除，避免多次进出叠加
+  const listeners = [];
+  function on(target, type, fn, opts){ target.addEventListener(type, fn, opts); listeners.push([target,type,fn,opts]); }
+
   function bindTimeline(){
-    document.getElementById('playBtn').addEventListener('click',()=>{
+    on(document.getElementById('playBtn'),'click',()=>{
       if(!playing && currentDay>=spanDays){ currentDay=0; finaleAutoShown=false; resetBubbles(); }
       setPlaying(!playing);
     });
-    document.getElementById('finaleBtn').addEventListener('click',()=>{ setPlaying(false); openFinale(); });
+    on(document.getElementById('finaleBtn'),'click',()=>{ setPlaying(false); openFinale(); });
 
     const scrub = document.getElementById('scrubber');
     let dragging=false;
@@ -824,13 +931,13 @@
       if(currentDay<spanDays) finaleAutoShown=false;
       updateAll(currentDay,false);
     }
-    scrub.addEventListener('mousedown',e=>{ dragging=true; setPlaying(false); setFromClientX(e.clientX); });
-    window.addEventListener('mousemove',e=>{ if(dragging) setFromClientX(e.clientX); });
-    window.addEventListener('mouseup',()=>{ dragging=false; });
+    on(scrub,'mousedown',e=>{ dragging=true; setPlaying(false); setFromClientX(e.clientX); });
+    on(window,'mousemove',e=>{ if(dragging) setFromClientX(e.clientX); });
+    on(window,'mouseup',()=>{ dragging=false; });
     // 触摸
-    scrub.addEventListener('touchstart',e=>{ dragging=true; setPlaying(false); setFromClientX(e.touches[0].clientX); },{passive:true});
-    window.addEventListener('touchmove',e=>{ if(dragging&&e.touches[0]) setFromClientX(e.touches[0].clientX); },{passive:true});
-    window.addEventListener('touchend',()=>{ dragging=false; });
+    on(scrub,'touchstart',e=>{ dragging=true; setPlaying(false); setFromClientX(e.touches[0].clientX); },{passive:true});
+    on(window,'touchmove',e=>{ if(dragging&&e.touches[0]) setFromClientX(e.touches[0].clientX); },{passive:true});
+    on(window,'touchend',()=>{ dragging=false; });
   }
   function resetBubbles(){
     Object.values(shownBubbles).forEach(el=>el.remove());
@@ -977,17 +1084,251 @@
     };
   }
 
-  // ============ 启动 ============
+  // ============ 启动本实例 ============
   try{
     renderApp();
     bindTimeline();
-    document.getElementById('footer').style.display='block';
+    const footer = document.getElementById('footer');
+    footer.style.display='block';
+    footer.classList.remove('landing-mode'); // 沙盘模式：完整时间轴
     lastT = performance.now();
     rafId = requestAnimationFrame(loop);
   }catch(err){
     console.error(err);
-    fail('渲染时出了点问题', '错误信息：'+esc(err.message||err));
+    // fail() 已经渲染了错误占位并抛出；这里兜底任何非 fail 的异常
+    if(String(err && err.message).indexOf('没能加载')<0 && String(err && err.message).indexOf('时间线')<0){
+      fail('渲染时出了点问题', '错误信息：'+esc(err && (err.message||err)));
+    }
   }
+
+    // ============ teardown：切回 landing 时彻底复位 ============
+    return function teardown(){
+      torndown = true;
+      if(rafId) cancelAnimationFrame(rafId);
+      playing = false;
+      // 摘除本实例所有持久监听
+      listeners.forEach(([t,type,fn,opts])=>{ try{ t.removeEventListener(type,fn,opts); }catch(e){} });
+      // 关掉可能开着的模态
+      const root=document.getElementById('modalRoot'); if(root) root.innerHTML='';
+      // 清空气泡缓存与画布
+      try{ resetBubbles(); }catch(e){}
+      Object.keys(painters).forEach(k=>{ painters[k].alive=false; delete painters[k]; });
+      appEl.innerHTML='';
+    };
+  } // end mountSandbox
+
+  // 引擎内用到的纯函数（无需实例状态），提到外层供 mountSandbox 与 landing 共用
+  function parseDate(s){ if(!s) return null; const d=new Date(s); return isNaN(d)?null:d; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+  // ==================================================================
+  //  路由 / 运行库加载 / Landing 首页
+  // ==================================================================
+  const TIER_ORDER = ['real','persona','celebrity'];
+  const TIER_INFO = {
+    real:     { key:'real',     em:'🔒', label:'真实自我' },
+    persona:  { key:'persona',  em:'🎭', label:'虚拟人设' },
+    celebrity:{ key:'celebrity',em:'🌟', label:'名人档案' }
+  };
+
+  const landingEl = document.getElementById('landing');
+  const appEl = document.getElementById('app');
+  const footerEl = document.getElementById('footer');
+  let activeTeardown = null;   // 当前沙盘实例的 teardown
+  let loadingRunId = null;     // 正在惰性加载的 run id（防重复点击）
+  const loadedRunFiles = {};   // file -> Promise（避免重复注入同一个文件）
+
+  // ---- 动态注入 script（相对路径，file:// 可用；禁 fetch）----
+  function injectScript(src){
+    if(loadedRunFiles[src]) return loadedRunFiles[src];
+    const p = new Promise((resolve,reject)=>{
+      const s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = ()=>resolve(true);
+      s.onerror = ()=>reject(new Error('load-failed:'+src));
+      document.head.appendChild(s);
+    });
+    loadedRunFiles[src] = p;
+    return p;
+  }
+
+  // ---- 读取清单（manifest 已在页面头部同步加载；real-manifest 静默容错）----
+  function getLibraryRuns(){
+    const lib = window.SANDBOX_LIBRARY;
+    if(!lib || !Array.isArray(lib.runs)) return [];
+    // 去重（同 id 只留第一条），并只保留有 id + file 的合法条目
+    const seen = {};
+    return lib.runs.filter(r=>{
+      if(!r || !r.id || !r.file) return false;
+      if(seen[r.id]) return false;
+      seen[r.id]=true; return true;
+    });
+  }
+
+  // ---- Landing 渲染 ----
+  function renderLanding(errMsg){
+    const runs = getLibraryRuns();
+    const byTier = { real:[], persona:[], celebrity:[] };
+    runs.forEach(r=>{
+      const tier = TIER_INFO[r.tier] ? r.tier : 'persona';
+      byTier[tier].push(r);
+    });
+
+    let html =
+      '<div class="landing">'+
+        '<div class="land-hero">'+
+          '<h1>另一个你</h1>'+
+          '<div class="sub">把一个真实的决定，交给几个平行的「你」各走一段日子。挑一份档案，看看那条没走的路。</div>'+
+          '<div class="pix-rule"></div>'+
+        '</div>';
+
+    if(errMsg){
+      html += '<div class="load-error">😕 '+esc(errMsg)+'</div>';
+    }
+
+    TIER_ORDER.forEach(tier=>{
+      const info = TIER_INFO[tier];
+      const list = byTier[tier];
+      html += '<section class="tier-section tier-'+tier+'">'+
+        '<div class="th">'+
+          '<span class="em">'+info.em+'</span>'+
+          '<h2>'+esc(info.label)+'</h2>'+
+          (tier==='celebrity'?'<span class="fic-note">虚构推演 · 娱乐向</span>':'')+
+          '<span class="cnt">'+(list.length?list.length+' 份':'')+'</span>'+
+        '</div>';
+
+      if(!list.length){
+        if(tier==='real'){
+          html += '<div class="empty-state"><span class="lock">🔒</span>'+
+            '你的真实推演只存在你自己的电脑上，这个公开页面永远看不到它。生成方法见仓库 <code>README</code>。</div>';
+        }else{
+          html += '<div class="empty-state">这一档暂时还没有推演。</div>';
+        }
+      }else{
+        html += '<div class="card-grid">';
+        list.forEach(r=>{
+          html += '<div class="run-card" data-run="'+esc(r.id)+'">'+
+            '<div class="rc-title">'+esc(r.title||r.id)+'</div>'+
+            (r.subtitle?'<div class="rc-sub">'+esc(r.subtitle)+'</div>':'<div class="rc-sub"></div>')+
+            '<div class="rc-foot">'+
+              '<span>'+(r.generatedAt?'🗓 '+esc(r.generatedAt):'')+'</span>'+
+              '<span class="rc-go">进入 →</span>'+
+            '</div>'+
+          '</div>';
+        });
+        html += '</div>';
+      }
+      html += '</section>';
+    });
+
+    html += '</div>';
+    landingEl.innerHTML = html;
+
+    // 绑定卡片点击
+    landingEl.querySelectorAll('.run-card[data-run]').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        if(loadingRunId) return;
+        enterRun(card.dataset.run, card);
+      });
+    });
+  }
+
+  // ---- 切到 landing 视图 ----
+  function goLanding(){
+    if(activeTeardown){ try{ activeTeardown(); }catch(e){} activeTeardown=null; }
+    appEl.style.display='none';
+    landingEl.style.display='block';
+    footerEl.style.display='block';
+    footerEl.classList.add('landing-mode'); // 只显示免责，藏时间轴
+    // 免责在 landing 也常驻
+    document.getElementById('disclaimer').innerHTML =
+      '⚠️ <b>这是可能性的戏剧化演出，不是预测</b>';
+    // 清 hash（回 landing）
+    if(location.hash){ history.replaceState(null,'', location.pathname+location.search); }
+    renderLanding();
+    window.scrollTo(0,0);
+  }
+
+  // ---- 进入某份推演（惰性加载 → 挂载沙盘）----
+  function enterRun(runId, cardEl){
+    const runs = getLibraryRuns();
+    const entry = runs.find(r=>r.id===runId);
+    if(!entry){ renderLanding('没找到这份推演（'+esc(runId)+'），可能清单已经更新，刷新一下再试。'); return; }
+
+    loadingRunId = runId;
+    if(cardEl) cardEl.classList.add('loading');
+
+    const done = ()=>{ loadingRunId=null; if(cardEl) cardEl.classList.remove('loading'); };
+
+    // 数据可能已经加载过（返回后再进）
+    function mountFromRegistry(){
+      const data = (window.SANDBOX_RUNS||{})[runId];
+      if(!data){
+        done();
+        renderLanding('这份推演的数据文件加载了，但没能读到内容（'+esc(runId)+'）。');
+        return;
+      }
+      // 若已有沙盘在挂，先拆掉
+      if(activeTeardown){ try{ activeTeardown(); }catch(e){} activeTeardown=null; }
+      landingEl.style.display='none';
+      appEl.style.display='block';
+      // 写 hash（深链）
+      if(location.hash!=='#run='+runId){
+        history.replaceState(null,'', location.pathname+location.search+'#run='+runId);
+      }
+      try{
+        activeTeardown = mountSandbox(data);
+      }catch(err){
+        console.error(err);
+        // mountSandbox 内部已把错误占位画进 #app，这里只需保证视图切过去
+      }
+      done();
+      window.scrollTo(0,0);
+    }
+
+    if((window.SANDBOX_RUNS||{})[runId]){ mountFromRegistry(); return; }
+
+    injectScript(entry.file).then(mountFromRegistry).catch(()=>{
+      done();
+      // 加载失败：友好中文错误，留在 landing
+      renderLanding('这份推演的数据文件没能加载（'+esc(entry.file)+'）。'+
+        '如果是在本地直接打开的，确认这个文件确实存在；也可能是文件还没生成。');
+    });
+  }
+
+  // ---- 深链：#run=<id> ----
+  function currentHashRun(){
+    const m = /#run=([^&]+)/.exec(location.hash||'');
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  // ---- 加载 real-manifest（静默容错），完成后再决定初始视图 ----
+  function boot(){
+    // real-manifest 极大概率不存在（公开站 404），onerror 静默跳过
+    injectScript('runs/real-manifest.js').catch(()=>{ /* 静默：本机才有 */ })
+      .then(()=>{
+        const deep = currentHashRun();
+        if(deep && getLibraryRuns().some(r=>r.id===deep)){
+          // 先把 landing 底子铺好（返回时有内容），再直接进沙盘
+          renderLanding();
+          enterRun(deep, null);
+        }else{
+          goLanding();
+        }
+      });
+    // 支持前进/后退键改 hash
+    window.addEventListener('hashchange', ()=>{
+      const deep = currentHashRun();
+      if(!deep){ if(appEl.style.display!=='none') goLanding(); return; }
+      if(loadingRunId===deep) return;
+      // 当前不在这个 run 上才切
+      enterRun(deep, null);
+    });
+  }
+
+  boot();
 
 })();
 </script>

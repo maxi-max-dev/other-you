@@ -8,3 +8,7 @@ data.real*.js
 # 系统/编辑器噪音
 .DS_Store
 *.bak
+
+# v0.1 运行库：真实自我推演永不入库
+runs/real/*
+runs/real-manifest.js
