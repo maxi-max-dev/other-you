@@ -1,0 +1,10 @@
+# 真实自我档案：永不进 git，只留说明文件
+profiles/real/*
+!profiles/real/README.md
+
+# 用真实档案生成的数据文件，同样不进 git
+data.real*.js
+
+# 系统/编辑器噪音
+.DS_Store
+*.bak
